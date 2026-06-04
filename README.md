@@ -4,126 +4,120 @@
 ![Java](https://img.shields.io/badge/Java-OOP-orange?style=for-the-badge&logo=java)
 ![Course](https://img.shields.io/badge/CS%20200-Programming%20II-blue?style=for-the-badge)
 
-A Venmo-inspired digital wallet desktop application built in Java with a graphical interface, persistent file-based storage, and full transaction management.
+A Venmo-inspired digital wallet built in Java — with a GUI, persistent storage, and real transaction management.
 
 ---
 
 ## Overview
 
-DigiWallet simulates how a real digital wallet works — users can create an account, link payment methods (bank accounts and credit cards), add funds, send and request money from other users, and withdraw back to a linked bank account. All data persists between sessions through a custom file management system.
+I started this project with the idea of building a bank system, but somewhere along the way it turned into something closer to Venmo. Users can create an account, link payment methods, add funds, send and request money from others, and withdraw back to a linked bank account. Everything persists between sessions — close the app, reopen it, and your balance, transaction history, and linked cards are all exactly where you left them.
 
-The project was developed as the final project for **CS 200 – Programming II** at MassBay Community College.
+This was my final project for **CS 200 – Programming II** at MassBay Community College. Honestly, it ended up more extensive than I originally planned — I kept wanting to improve it as I built it.
 
 ---
 
 ## Features
 
-- **Account creation and authentication** — register with name, email, phone, and password; sessions persist across app restarts
-- **Wallet balance management** — real-time balance updates on every transaction
-- **Send & request money** — transfer funds to other users by email; request payments with pending status tracking
-- **Multiple payment methods** — link bank accounts and credit cards (Visa, Mastercard, Amex); add funds or withdraw back to bank
-- **Transaction history** — full log of all transactions with type, amount, counterparty, and status
-- **Graphical interface** — built with Java's `JOptionPane` and `JScrollPane` for a dialog-based GUI
-- **Data persistence** — flat-file database using `.txt` files per user (accounts, transactions, payment methods)
+- **Account creation and authentication** — register with name, email, phone, and password; log back in anytime and pick up right where you left off
+- **Wallet balance** — updates in real time with every transaction
+- **Send & request money** — transfer funds to other users by email; requests are tracked as PENDING until resolved
+- **Multiple payment methods** — link bank accounts and credit cards (Visa, Mastercard, Amex); use them to add funds or withdraw
+- **Transaction history** — scrollable log with type, amount, counterparty, and status for every transaction
+- **Graphical interface** — dialog-based GUI built with Java's `JOptionPane` and `JScrollPane`
+- **Data persistence** — flat-file storage using per-user `.txt` files as a simplified database
 
 ---
 
 ## Architecture & Design
 
-The application follows a clean Object-Oriented design with separation of concerns across 7 classes:
+The app is structured around 7 classes, each with a clear responsibility:
 
 ```
 digitalwallet/
-├── App.java                     # Entry point, menu controller, UI logic
-├── User.java                    # Core user entity and business logic
-├── PaymentMethod.java           # Abstract base class for payment types
-├── BankAccount.java             # Extends PaymentMethod — debit/credit operations
-├── CreditCard.java              # Extends PaymentMethod — card processing
-├── TransactionRecord.java       # Immutable transaction data model
-├── FileManager.java             # Static utility — all file I/O operations
-└── InsufficientFundsException.java  # Custom checked exception
+├── App.java                        # Entry point, menu controller, all UI logic
+├── User.java                       # Core user entity and business logic
+├── PaymentMethod.java              # Abstract base class for payment types
+├── BankAccount.java                # Extends PaymentMethod — debit/credit operations
+├── CreditCard.java                 # Extends PaymentMethod — card processing
+├── TransactionRecord.java          # Transaction data model
+├── FileManager.java                # Static utility — all file I/O
+└── InsufficientFundsException.java # Custom checked exception
 ```
 
-### Key OOP Concepts Applied
+### OOP Concepts Applied
 
-| Concept | Implementation |
+| Concept | How it shows up |
 |---|---|
-| **Abstraction** | `PaymentMethod` abstract class enforces `linkToAccount()`, `getSummary()`, `getType()` contracts |
-| **Inheritance** | `BankAccount` and `CreditCard` extend `PaymentMethod` |
-| **Polymorphism** | `ArrayList<PaymentMethod>` stores both types; runtime dispatch handles each correctly |
-| **Custom Exception** | `InsufficientFundsException` propagates through wallet and bank operations |
-| **Recursion** | `readAmount()` re-prompts recursively on invalid input |
-| **File I/O** | `FileManager` handles all persistence — per-user flat files as a simplified database |
+| **Abstraction** | `PaymentMethod` is abstract — impossible to instantiate directly; forces `BankAccount` and `CreditCard` to implement `linkToAccount()`, `getSummary()`, and `getType()` |
+| **Inheritance** | Both `BankAccount` and `CreditCard` extend `PaymentMethod` |
+| **Polymorphism** | `ArrayList<PaymentMethod>` holds both types; the right behavior is dispatched at runtime |
+| **Custom Exception** | `InsufficientFundsException` is thrown and caught across wallet and bank operations |
+| **Recursion** | `readAmount()` calls itself when the input is invalid — keeps prompting until it gets a real number |
+| **File I/O** | `FileManager` handles all reads and writes — one file per user for accounts, transactions, and payment methods |
 
 ---
 
 ## How to Run
 
-### Prerequisites
-- Java 8 or higher
-- Any IDE (IntelliJ IDEA, Eclipse, VS Code with Java Extension Pack)
-
-### Steps
+**Prerequisites:** Java 8 or higher + any IDE (IntelliJ IDEA, Eclipse, or VS Code with the Java Extension Pack)
 
 ```bash
-# 1. Clone the repository
+# Clone the repo
 git clone https://github.com/victorhubarb/digiwallet.git
 cd digiwallet
 
-# 2. Compile all files
-javac digitalwallet/*.java
+# Compile
+javac src/digitalwallet/*.java -d out
 
-# 3. Run the application
-java digitalwallet.App
+# Run
+java -cp out digitalwallet.App
 ```
 
-> The application will create `users.txt`, `transactions_<email>.txt`, and `paymentmethods_<email>.txt` files in the working directory to persist data between sessions.
+> On first run, the app creates `users.txt`, `transactions_<email>.txt`, and `paymentmethods_<email>.txt` in the working directory. These files are what keeps your session alive between runs.
 
 ---
 
 ## Usage
 
-On launch, the app presents three options:
+When you open the app, you get three options: create an account, log in, or exit. Once you're in, the main menu looks like this:
 
-1. **Create Account** — enter name, email, phone, and password
-2. **Log In** — authenticate and resume your session with full history restored
-3. **Exit**
-
-Once logged in, the main menu offers:
-
-| Option | Description |
+| Option | What it does |
 |---|---|
 | Send Money | Transfer funds to another user by email |
-| Request Money | Send a payment request (logged as PENDING) |
+| Request Money | Send a payment request — logged as PENDING |
 | Add Money | Deposit from a linked bank account or credit card |
-| Withdraw | Transfer wallet balance back to a linked bank account |
-| Transaction History | Scrollable log of all past transactions |
+| Withdraw | Move wallet balance back to a linked bank account |
+| Transaction History | Full scrollable log of every transaction |
 | Link Payment Method | Add a bank account or credit/debit card |
 
 ---
 
 ## Design Artifacts
 
-This project was developed with full software engineering documentation:
+The project includes full software engineering documentation — not just code:
 
-- **Use Case Diagram** — maps all user interactions and system flows
-- **User Personas** — two personas defined to guide UX decisions
-- **UML Class Diagram** — complete class relationships and method signatures
+- **[UML Class Diagram](docs/uml-class-diagram.pdf)** — class relationships and method signatures
+- **[Use Case Diagram](docs/use-case-diagram.pdf)** — all user interactions and system flows
+- **[Use Cases](docs/use-cases.pdf)** — detailed descriptions of each user action
+- **[User Personas](docs/personas.pdf)** — two personas that guided design decisions
+- **[Project Summary](docs/project-summary.pdf)** — full write-up of goals, requirements, and implementation
 
 ---
 
 ## What I'd Improve Next
 
-- Replace flat-file storage with SQLite or an embedded database
-- Add password hashing (currently stored as plaintext — known limitation)
-- Implement actual peer-to-peer transaction resolution (currently send/request are one-sided)
-- Add input validation for routing/account numbers and card formats
-- Migrate GUI from `JOptionPane` to a proper Swing or JavaFX interface
+A few things I'd tackle if I kept building this out:
+
+- Swap flat-file storage for SQLite or an embedded database
+- Hash passwords — right now they're stored in plaintext, which is a known limitation
+- Make send/request actually peer-to-peer — currently they're one-sided operations
+- Add proper input validation for routing numbers, card numbers, and expiry dates
+- Rebuild the GUI in JavaFX for a real interface instead of dialog boxes
 
 ---
 
 ## Author
 
-**Victor Hugo Barbosa**  
-CS Student — MassBay Community College  
+**Victor Hugo Barbosa**
+CS Student — MassBay Community College
 [GitHub](https://github.com/victorhubarb) · [LinkedIn](https://www.linkedin.com/in/victorhbarbosa/)
