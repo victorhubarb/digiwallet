@@ -4,15 +4,15 @@
 ![Java](https://img.shields.io/badge/Java-OOP-orange?style=for-the-badge&logo=java)
 ![Course](https://img.shields.io/badge/CS%20200-Programming%20II-blue?style=for-the-badge)
 
-A Venmo-inspired digital wallet built in Java — with a GUI, persistent storage, and real transaction management.
+A Venmo-inspired digital wallet built in Java — with a GUI, persistent file-based storage, and full transaction management.
 
 ---
 
 ## Overview
 
-I started this project with the idea of building a bank system, but somewhere along the way it turned into something closer to Venmo. Users can create an account, link payment methods, add funds, send and request money from others, and withdraw back to a linked bank account. Everything persists between sessions — close the app, reopen it, and your balance, transaction history, and linked cards are all exactly where you left them.
+I started with the idea of building a bank system, but somewhere along the way it turned into something closer to Venmo. Users can create an account, link payment methods, add funds, send and request money from others, and withdraw back to a linked bank account. Everything persists between sessions — close the app, reopen it, and your balance, transaction history, and linked cards are exactly where you left them.
 
-This was my final project for **CS 200 – Programming II** at MassBay Community College. Honestly, it ended up more extensive than I originally planned — I kept wanting to improve it as I built it.
+This was my final project for **CS 200 – Programming II** at MassBay Community College. Honestly, it ended up more extensive than I originally planned — I kept wanting to improve it as I built it. That's probably the best sign a project is going well.
 
 ---
 
@@ -28,20 +28,20 @@ This was my final project for **CS 200 – Programming II** at MassBay Community
 
 ---
 
-## Architecture & Design
+## Architecture
 
-The app is structured around 7 classes, each with a clear responsibility:
+The app is structured around 8 classes, each with a clear responsibility:
 
 ```
 digitalwallet/
-├── App.java                        # Entry point, menu controller, all UI logic
-├── User.java                       # Core user entity and business logic
-├── PaymentMethod.java              # Abstract base class for payment types
-├── BankAccount.java                # Extends PaymentMethod — debit/credit operations
-├── CreditCard.java                 # Extends PaymentMethod — card processing
-├── TransactionRecord.java          # Transaction data model
-├── FileManager.java                # Static utility — all file I/O
-└── InsufficientFundsException.java # Custom checked exception
+├── App.java                     # Entry point, menu controller, all UI logic
+├── User.java                    # Core user entity and business logic
+├── PaymentMethod.java           # Abstract base class for payment types
+├── BankAccount.java             # Extends PaymentMethod — debit/credit operations
+├── CreditCard.java              # Extends PaymentMethod — card processing
+├── TransactionRecord.java       # Transaction data model
+├── FileManager.java             # Static utility — all file I/O operations
+└── InsufficientFundsException.java  # Custom checked exception
 ```
 
 ### OOP Concepts Applied
@@ -59,17 +59,13 @@ digitalwallet/
 
 ## How to Run
 
-**Prerequisites:** Java 8 or higher + any IDE (IntelliJ IDEA, Eclipse, or VS Code with the Java Extension Pack)
+**Prerequisites:** Java 8 or higher + any IDE (IntelliJ IDEA, Eclipse, or VS Code with Java Extension Pack)
 
 ```bash
-# Clone the repo
 git clone https://github.com/victorhubarb/digiwallet.git
 cd digiwallet
 
-# Compile
 javac src/digitalwallet/*.java -d out
-
-# Run
 java -cp out digitalwallet.App
 ```
 
@@ -119,5 +115,4 @@ A few things I'd tackle if I kept building this out:
 ## Author
 
 **Victor Hugo Barbosa**
-CS Student — MassBay Community College
 [GitHub](https://github.com/victorhubarb) · [LinkedIn](https://www.linkedin.com/in/victorhbarbosa/)
