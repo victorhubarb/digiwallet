@@ -1,0 +1,9 @@
+out/
+*.class
+.DS_Store
+.idea/
+.vscode/
+*.iml
+users.txt
+transactions_*.txt
+paymentmethods_*.txt

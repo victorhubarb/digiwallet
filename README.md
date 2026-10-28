@@ -12,6 +12,8 @@ It was the final project for CS 200 (Programming II) at MassBay Community Colleg
 - **Persistence.** `FileManager` reads and writes `users.txt`, `transactions_<email>.txt` and `paymentmethods_<email>.txt` using a `|`-separated format.
 - **Input handling.** `readAmount()` calls itself until it gets a valid positive number.
 
+![UML class diagram](docs/uml-class-diagram.png)
+
 The design work is in the repo too, in `docs/`: [UML class diagram](docs/uml-class-diagram.pdf), [use case diagram](docs/use-case-diagram.pdf), [use cases](docs/use-cases.pdf), [personas](docs/personas.pdf) and a [project summary](docs/project-summary.pdf).
 
 ## Run it
